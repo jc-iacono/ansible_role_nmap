@@ -5,10 +5,10 @@
 #-------------------------------------------------------------------------------
 
 - name: 'include variables'
-  include_vars: "{{item}}"
+  include_vars: "{{ item }}"
   with_first_found:
     - files:
-      - "vars/{{ansible_distribution_version}}.yml"
+      - "vars/{{ ansible_distribution_version }}.yml"
       - 'vars/main.yml'
       skip: 'true'
   tags:
@@ -22,7 +22,10 @@
 - name: 'package remove nmap'
   package:
     state: 'absent'
-    name: "{{package_name_nmap}}"
+    name: "{{ package_name_nmap }}"
+  register: result_nmap_r
+  until: result_nmap_r is succeded
+  retries: 3
   tags:
     - remove
     - nmap
